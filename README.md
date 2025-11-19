@@ -7,22 +7,22 @@ mobile application, please provide the following:
 
 ### **App Information**
 
--   Full description of the app and its features\
--   App URL in Zid Apps Market\
+-   Full description of the app and its features
+-   App URL in Zid Apps Market
 -   Support email and official website (if available)
 
 ### **Media & Demonstration**
 
--   Introductory video explaining the app's service\
+-   Introductory video explaining the app's service
 -   Clear indication of where the service should appear in the mobile
-    app\
+    app
     (e.g., product page, checkout, order success page)
 
 ### **User Stories**
 
-Provide: - A user story describing how the service works on the **Zid
-web store** - A user story describing how the service should work on the
-**Apps Bunches mobile app**
+Provide: 
+- A user story describing how the service works on the **Zid web store** 
+- A user story describing how the service should work on the **Apps Bunches mobile app**
 
 #### **Examples**
 
@@ -46,8 +46,8 @@ web store** - A user story describing how the service should work on the
 ### **Flutter SDK Development**
 
 -   Developers must build a **Flutter SDK** to integrate their service
-    with Apps Bunches mobile app\
--   SDK must include **full usage documentation**\
+    with Apps Bunches mobile app
+-   SDK must include **full usage documentation**
 -   SDK must be published on **pub.dev**
 
 ### **Configuration & Initialization**
@@ -64,9 +64,9 @@ SDK must receive configuration JSON from:
     GET /api/v1/scripts
     GET https://api.zid.sa/v2/catalog/stores/$storeId/layout-setting
 
-JSON includes: - App status\
-- Tokens, IDs\
-- Colors\
+JSON includes: - App status
+- Tokens, IDs
+- Colors
 - Any required values
 
 ### **Initialization Method Example**
@@ -168,9 +168,10 @@ APPSDKNAME.return(
 
 ## 4. Targeted App Categories
 
-This document applies to: - Customer Support Apps\
-- Marketing Apps\
-- Operations\
+This document applies to: 
+- Customer Support Apps
+- Marketing Apps
+- Operations
 - Other service apps
 
 ------------------------------------------------------------------------
