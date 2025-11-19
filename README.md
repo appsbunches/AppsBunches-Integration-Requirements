@@ -1,4 +1,4 @@
-# Recommendations for Integrating Services into Apps Bunches Mobile Application
+# AppsBunches Integration Requirements for Third-Party Services (Zid Merchants)
 
 This document is a guideline for third-party providers who want to integrate their services into apps built using Apps Bunches Mobile App for Zid merchants.
 
@@ -185,7 +185,9 @@ APPSDKNAME.return(
 );
 ```
 
-#### You can also develop any type of widgets and functions needed to showcase your services.
+You can also develop any type of widgets and functions needed to showcase your services.
+
+---
 
 ## 5. Quality Standards
 
@@ -217,5 +219,15 @@ All examples are illustrative and may be modified based on service requirements.
 * **Partnership Email:** [Partnership@appsbunches.com](mailto:Partnership@appsbunches.com)
 * **Support & Development Email:** [Dev@appsbunches.com](mailto:Dev@appsbunches.com)
 
-```
-```
+---
+
+## About AppsBunches
+
+(عناقيد التطبيقات)
+Technology company specializing in:
+
+* Mobile app development
+* E-commerce solutions
+* System integrations
+* Zoho customization
+* Digital transformation
