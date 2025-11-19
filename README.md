@@ -1,77 +1,110 @@
 # Recommendations for Integrating Services into Apps Bunches Mobile Application
 
-## 1. Business Cycle Requirements
+This document is a guideline for third-party providers who want to integrate their services into apps built using Apps Bunches Mobile App for Zid merchants.
 
-To ensure smooth integration of your app service into the Apps Bunches
-mobile application, please provide the following:
+### Notes To Consider
 
-### **App Information**
+* Coordinating with the Partnerships Team regarding the collaboration agreement.
+* The application must include more than 20 merchants from Apps Bunches’ clients using the app, and this does not represent any direct confirmation of support.
 
--   Full description of the app and its features
--   App URL in Zid Apps Market
--   Support email and official website (if available)
+---
 
-### **Media & Demonstration**
+## 1. Introduction
 
--   Introductory video explaining the app's service
--   Clear indication of where the service should appear in the mobile
-    app
-    (e.g., product page, checkout, order success page)
+Apps Bunches Mobile App is a mobile layer for Zid merchants that allows third-party services to integrate their apps via a **Flutter SDK**.
+The SDK communicates with Zid APIs and integrates services seamlessly into the mobile app experience without modifying core functionalities.
 
-### **User Stories**
+---
 
-Provide: 
-- A user story describing how the service works on the **Zid web store** 
-- A user story describing how the service should work on the **Apps Bunches mobile app**
+## 2. Business Cycle Requirements
 
-#### **Examples**
+### App Information
 
-##### Chatbot SDK
+* Full description of the app and its features
+* App URL in Zid Apps Market
+* Support email and official website (if available)
 
-    Open the app → Open the home page → Click on SDK chat icon
+### Media & Demonstration
 
-##### Upselling SDK
+* Introductory video explaining the app's service
+* Clear indication of where the service should appear in the mobile app (e.g., product page, checkout, order success page)
 
-    Open the app → Open the cart page → Upselling bottom sheet appears automatically → User adds product to cart
+### User Stories
 
-##### Loyalty Program SDK
+* User story describing how the service works on the Zid web store
+* User story describing how the service should work on Apps Bunches mobile app
 
-    Open the app → Open the home page → Points widget should appear
-    Open the app → Open the account page → Points widget should appear
+#### Examples
 
-------------------------------------------------------------------------
+**Chatbot SDK:**
+Open the app → Home page → Click on SDK chat icon
 
-## 2. Technical Requirements
+**Upselling SDK:**
+Open the app → Cart page → Upselling bottom sheet appears automatically → User adds product to cart
 
-### **Flutter SDK Development**
+**Loyalty Program SDK:**
+Open the app → Home page → Points widget should appear
+Open the app → Account page → Points widget should appear
 
--   Developers must build a **Flutter SDK** to integrate their service
-    with Apps Bunches mobile app
--   SDK must include **full usage documentation**
--   SDK must be published on **pub.dev**
+---
 
-### **Configuration & Initialization**
+## 3. Technical Requirements
 
--   SDK must accept initial configuration values in **JSON**
--   SDK must support **sandbox mode** for testing
--   Sensitive data must be **encrypted**
--   SDK must support the latest **Flutter stable version**
+### 3.1 Flutter SDK Development
 
-### **Integration with Zid APIs**
+* Developers must build a **Flutter SDK**
+* SDK must include **full usage documentation**
+* SDK must be published on **pub.dev**
+* SDK must support the latest **Flutter stable version**
 
-SDK must receive configuration JSON from:
+### 3.2 Initialization & Configuration
 
-    GET /api/v1/scripts
-    GET https://api.zid.sa/v2/catalog/stores/$storeId/layout-setting
+* SDK must accept initial configuration values in **JSON**
+* SDK must support **sandbox mode** for testing
+* Sensitive data must be **encrypted**
+* Example JSON received from Zid API:
 
-JSON includes: - App status
-- Tokens, IDs
-- Colors
-- Any required values
+```json
+{
+  "app_key": "XXXX",
+  "status": true,
+  "sandbox": false,
+  "primary_color": "#FF6600",
+  "store_id": "12345",
+  "token": "ABCDEF123456",
+  "config": {
+    "show_button": true,
+    "widget_position": "home_page"
+  }
+}
+```
 
-### **Initialization Method Example**
+### 3.3 SDK Lifecycle
 
-``` dart
+1. App fetches JSON configuration from Zid API on launch
+2. Pass JSON to third-party SDK via init method
+3. SDK configures itself based on JSON
+4. SDK should handle:
+
+   * Page route tracking
+   * Cart updates
+   * Store changes
+
+### 3.4 Integration with Zid APIs
+
+* `GET /api/v1/scripts`
+* `GET /api/v2/catalog/stores/$storeId/layout-setting`
+
+JSON includes:
+
+* App status
+* Tokens & IDs
+* Colors
+* Any required configuration
+
+### 3.5 Initialization Example
+
+```dart
 APPSDKNAME.init(initialJson: {
   'status': true,
   'token': '123456890',
@@ -80,19 +113,19 @@ APPSDKNAME.init(initialJson: {
 .onCatchError((e) => print(e));
 ```
 
-------------------------------------------------------------------------
+---
 
-## 3. Optional Features
+## 4. Optional SDK Features
 
-### **Page Listener**
+### 4.1 Page Listener
 
-``` dart
+```dart
 APPSDKNAME.trackPageRoute(pageName: "wishlist");
 ```
 
-### **Cart Events (CRUD)**
+### 4.2 Cart Events (CRUD)
 
-``` dart
+```dart
 APPSDKNAME.sendEvent(
   cartEvent: CartEvents(
     onAddToCart: (itemCartId) {},
@@ -101,39 +134,31 @@ APPSDKNAME.sendEvent(
 );
 ```
 
-### **UI Integration**
+### 4.3 UI Widgets
 
-SDK may provide dialogs, bottom sheets, or custom widgets.
-
-#### Example:
-
-``` dart
+```dart
 Column(
- children: [
-   OrderSuccessHeaderWidget(orderId: widget.orderId),
-   OrderDetailsButtonWidget(orderId: widget.orderId),
-   APPSDKNAME.orderDetailsWidget(),
-   SizedBox(height: 30),
-   TransferPaymentWidget(orderId: widget.orderId),
-   SizedBox(height: 30),
-   VatInfoWidget(),
- ],
+  children: [
+    OrderSuccessHeaderWidget(orderId: widget.orderId),
+    OrderDetailsButtonWidget(orderId: widget.orderId),
+    APPSDKNAME.orderDetailsWidget(),
+    SizedBox(height: 30),
+    TransferPaymentWidget(orderId: widget.orderId),
+    SizedBox(height: 30),
+    VatInfoWidget(),
+  ],
 );
 ```
 
-------------------------------------------------------------------------
+### 4.4 Search Events
 
-### **Search Events**
-
-``` dart
+```dart
 List<Products> products = await APPSDKNAME.getProducts(q: 'Search Item');
 ```
 
-------------------------------------------------------------------------
+### 4.5 Abandoned Cart Events
 
-### **Abandoned Cart Events**
-
-``` dart
+```dart
 APPSDKNAME.addCartUpdates(
   deviceId: '123456789',
   customerObject: {},
@@ -142,19 +167,15 @@ APPSDKNAME.addCartUpdates(
 );
 ```
 
-------------------------------------------------------------------------
+### 4.6 Customer Support Widgets
 
-### **Customer Support Widgets (ChatBot, WhatsApp, etc.)**
-
-``` dart
+```dart
 floatingActionButton: APPSDKNAME.showFloatingActionButton();
 ```
 
-------------------------------------------------------------------------
+### 4.7 Cashback / Exchange / Return Events
 
-### **Cashback / Exchange / Return Events**
-
-``` dart
+```dart
 APPSDKNAME.showWidgets();
 
 APPSDKNAME.return(
@@ -164,19 +185,37 @@ APPSDKNAME.return(
 );
 ```
 
-------------------------------------------------------------------------
+#### You can also develop any type of widgets and functions needed to showcase your services.
 
-## 4. Targeted App Categories
+## 5. Quality Standards
 
-This document applies to: 
-- Customer Support Apps
-- Marketing Apps
-- Operations
-- Other service apps
+* SDK must not crash the app
+* SDK must not request extra permissions unnecessarily
+* SDK must be lightweight and optimized
+* SDK must not interfere with Core App functionality
+* SDK should provide graceful error handling
 
-------------------------------------------------------------------------
+---
 
-## 5. Note
+## 6. Targeted App Categories
 
-All examples are illustrative and may be modified based on service
-requirements.
+* Customer Support Apps
+* Marketing Apps
+* Operations Apps
+* Other Service Apps
+
+---
+
+## 7. Notes
+
+All examples are illustrative and may be modified based on service requirements.
+
+---
+
+### Contact Emails
+
+* **Partnership Email:** [Partnership@appsbunches.com](mailto:Partnership@appsbunches.com)
+* **Support & Development Email:** [Dev@appsbunches.com](mailto:Dev@appsbunches.com)
+
+```
+```
