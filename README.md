@@ -96,6 +96,15 @@ Open the app → Account page → Points widget should appear
   }
 }
 ```
+### 5.2.1 Sandbox / Test Store (For SDK Developers)
+
+Purpose:
+Your SDK must support a sandbox mode for safe testing before production. AppsBunches will add your SDK to the sandbox store (Store ID: 166193) to verify that all features work correctly.
+
+Instructions for SDK Developers:
+* Implement your SDK so it works correctly in sandbox mode.
+* Ensure all features functions as expected.
+* After successful testing, AppsBunches team will add the SDK to production stores.ڈ
 
 ### 5.3 SDK Lifecycle
 
@@ -133,26 +142,36 @@ APPSDKNAME.init(initialJson: {
 
 ---
 
-## 6. Optional SDK Features
+## 6. Optional SDK Features (Methods Should Implemented by Partner SDKs)
+Note for SDK Developers:
+The following examples are methods that your SDK can implement. The AppsBunches mobile app will call these methods at runtime to trigger actions, send data, or render your widgets. Make sure the method signatures match the examples.
 
-### 6.1 Page Listener
+### 6.1 Page Navigation Listener
+Purpose: The SDK should implement a method to receive the current page name. The mobile app will call this method whenever the user navigates to a new screen. This allows the SDK to track user flows and analyze page visits.
 
 ```dart
 APPSDKNAME.trackPageRoute(pageName: "wishlist");
 ```
 
-### 6.2 Cart Events (CRUD)
+### 6.2 Cart Events Handlers (CRUD)
+Purpose: The SDK should implement methods for cart actions if it interacts with product cards in the app. Whenever a user adds, removes, or updates a product in the cart, your SDK should send the relevant data (product ID, quantity, custom fields, etc.) to the app so the app can update the actual cart state.
 
 ```dart
-APPSDKNAME.sendEvent(
-  cartEvent: CartEvents(
-    onAddToCart: (itemCartId) {},
-    onDeleteToCart: (itemCartId) {},
-  ),
+APPSDKNAME.registerCartEventHandlers(
+  onAddToCart: (productId, quantity, customFields) {
+    AppCartLogic.addToCart(productId, quantity, customFields);
+  },
+  onRemoveFromCart: (productId) {
+    AppCartLogic.addToCart(productId, quantity, customFields);
+  },
+  onUpdateCartItem: (productId, quantity) {
+    AppCartLogic.addToCart(productId, quantity, customFields);
+  },
 );
 ```
 
-### 6.3 UI Widgets
+### 6.3 Custom UI Widgets
+Purpose: If your SDK needs to display custom widgets in specific areas of the app, implement methods that render these widgets. The app will call your methods to insert your widgets at the appropriate positions.
 
 ```dart
 Column(
@@ -169,12 +188,14 @@ Column(
 ```
 
 ### 6.4 Search Events
+Purpose: If your SDK modifies or enhances search results, implement a method that receives a search query from the app and returns an updated list of products based on your internal logic or recommendations.
 
 ```dart
 List<Products> products = await APPSDKNAME.getProducts(q: 'Search Item');
 ```
 
 ### 6.5 Abandoned Cart Events
+Purpose: If your SDK tracks cart updates for abandoned cart handling, implement a method that receives updates such as cart status, user info, product details, current phase, and other metadata.
 
 ```dart
 APPSDKNAME.addCartUpdates(
@@ -186,12 +207,14 @@ APPSDKNAME.addCartUpdates(
 ```
 
 ### 6.6 Customer Support Widgets
+Purpose: Implement methods to render floating buttons or other support widgets. The app will call these methods to display your support UI.
 
 ```dart
 floatingActionButton: APPSDKNAME.showFloatingActionButton();
 ```
 
 ### 6.7 Cashback / Exchange / Return Events
+Purpose: Implement methods to handle actions related to cashback, exchanges, or returns. The app will call these methods with the relevant order or user data.
 
 ```dart
 APPSDKNAME.showWidgets();
